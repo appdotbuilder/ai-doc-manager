@@ -1,10 +1,4 @@
-
 import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
@@ -133,212 +127,210 @@ export function SourceManager({ documentId }: SourceManagerProps) {
 
   const getSourceTypeLabel = (sourceType: string): string => {
     switch (sourceType) {
-      case 'url': return 'Web Link';
-      case 'file': return 'File Upload';
-      case 'text': return 'Text Note';
-      default: return 'Unknown';
+      case 'url': return 'WEB LINK';
+      case 'file': return 'FILE UPLOAD';
+      case 'text': return 'TEXT NOTE';
+      default: return 'UNKNOWN';
     }
   };
 
   return (
     <div className="h-full flex flex-col p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-xl font-semibold">📎 Document Sources</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            Add research materials, references, and notes to enhance your document
-          </p>
+      {/* Neobrutalist Header */}
+      <div className="neo-bg-accent neo-border-thick neo-shadow p-6 mb-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="neo-text-xl neo-bold neo-uppercase">📎 DOCUMENT SOURCES</h2>
+            <p className="font-bold neo-uppercase text-sm mt-2">
+              ADD RESEARCH MATERIALS, REFERENCES, AND NOTES TO ENHANCE YOUR DOCUMENT
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAddForm(!showAddForm)}
+            className="btn-primary"
+          >
+            {showAddForm ? '❌ CANCEL' : '➕ ADD SOURCE'}
+          </button>
         </div>
-        <Button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          {showAddForm ? '❌ Cancel' : '➕ Add Source'}
-        </Button>
       </div>
 
-      {/* Add Source Form */}
+      {/* Neobrutalist Add Source Form */}
       {showAddForm && (
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg">✨ Add New Source</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleCreateSource} className="space-y-4">
-              <Input
-                placeholder="Source title..."
-                value={formData.title}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>)=>
-                  setFormData((prev: CreateSourceInput) => ({ ...prev, title: e.target.value }))
-                }
-                required
-              />
+        <div className="neo-card mb-6">
+          <h3 className="neo-text-xl neo-bold neo-uppercase mb-4">✨ ADD NEW SOURCE</h3>
+          <form onSubmit={handleCreateSource} className="space-y-4">
+            <input
+              type="text"
+              placeholder="SOURCE TITLE..."
+              value={formData.title}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>
+                setFormData((prev: CreateSourceInput) => ({ ...prev, title: e.target.value }))
+              }
+              required
+              className="w-full"
+            />
 
+            <div className="neo-border neo-shadow">
               <Select
                 value={formData.source_type || 'text'}
                 onValueChange={(value: 'url' | 'file' | 'text') =>
                   setFormData((prev: CreateSourceInput) => ({ ...prev, source_type: value }))
                 }
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select source type" />
+                <SelectTrigger className="font-bold neo-uppercase">
+                  <SelectValue placeholder="SELECT SOURCE TYPE" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="text">📝 Text Note</SelectItem>
-                  <SelectItem value="url">🔗 Web Link</SelectItem>
-                  <SelectItem value="file">📁 File Upload</SelectItem>
+                <SelectContent className="neo-card">
+                  <SelectItem value="text" className="font-bold neo-uppercase">📝 TEXT NOTE</SelectItem>
+                  <SelectItem value="url" className="font-bold neo-uppercase">🔗 WEB LINK</SelectItem>
+                  <SelectItem value="file" className="font-bold neo-uppercase">📁 FILE UPLOAD</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
 
-              {formData.source_type === 'url' && (
-                <Input
-                  type="url"
-                  placeholder="https://example.com"
-                  value={formData.source_url || ''}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFormData((prev: CreateSourceInput) => ({
-                      ...prev,
-                      source_url: e.target.value || null
-                    }))
-                  }
-                />
-              )}
-
-              <Textarea
-                placeholder="Source content, notes, or description..."
-                value={formData.content}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                  setFormData((prev: CreateSourceInput) => ({ ...prev, content: e.target.value }))
+            {formData.source_type === 'url' && (
+              <input
+                type="url"
+                placeholder="HTTPS://EXAMPLE.COM"
+                value={formData.source_url || ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFormData((prev: CreateSourceInput) => ({
+                    ...prev,
+                    source_url: e.target.value || null
+                  }))
                 }
-                rows={4}
-                required
+                className="w-full"
               />
+            )}
 
-              <div className="flex space-x-2">
-                <Button type="submit" disabled={isCreating}>
-                  {isCreating ? '⏳ Adding...' : '💾 Add Source'}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowAddForm(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+            <textarea
+              placeholder="SOURCE CONTENT, NOTES, OR DESCRIPTION..."
+              value={formData.content}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                setFormData((prev: CreateSourceInput) => ({ ...prev, content: e.target.value }))
+              }
+              rows={4}
+              required
+              className="w-full"
+            />
+
+            <div className="flex space-x-3">
+              <button type="submit" disabled={isCreating} className="btn-primary">
+                {isCreating ? '⏳ ADDING...' : '💾 ADD SOURCE'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="btn-secondary"
+              >
+                CANCEL
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
-      {/* Sources List */}
+      {/* Neobrutalist Sources List */}
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
           <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-4">
-                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                  <div className="h-3 bg-gray-100 rounded w-full mb-2"></div>
-                  <div className="h-3 bg-gray-100 rounded w-2/3"></div>
-                </CardContent>
-              </Card>
-            ))}
+            <div className="spinner mx-auto"></div>
+            <p className="text-center font-bold neo-uppercase">LOADING SOURCES...</p>
           </div>
         ) : sources.length === 0 ? (
-          <Card className="flex items-center justify-center py-12">
-            <CardContent className="text-center">
-              <div className="text-6xl mb-4">📚</div>
-              <h3 className="text-lg font-medium text-gray-700 mb-2">No sources yet</h3>
-              <p className="text-gray-500 mb-4">
-                Add research materials, references, or notes to help with your writing
+          <div className="neo-card flex items-center justify-center py-16">
+            <div className="text-center">
+              <div className="text-8xl mb-6">📚</div>
+              <h3 className="neo-text-xl neo-bold neo-uppercase mb-4">NO SOURCES YET</h3>
+              <p className="font-bold neo-uppercase mb-6">
+                ADD RESEARCH MATERIALS, REFERENCES, OR NOTES TO HELP WITH YOUR WRITING
               </p>
-              <Button
+              <button
                 onClick={() => setShowAddForm(true)}
-                variant="outline"
-                className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                className="btn-primary"
               >
-                📎 Add Your First Source
-              </Button>
-            </CardContent>
-          </Card>
+                📎 ADD YOUR FIRST SOURCE
+              </button>
+            </div>
+          </div>
         ) : (
           <ScrollArea className="h-full">
             <div className="space-y-4">
               {sources.map((source: Source) => (
-                <Card key={source.id} className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center space-x-2 flex-1">
-                        <span className="text-lg">{getSourceIcon(source.source_type)}</span>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm">{source.title}</h4>
-                          <div className="flex items-center space-x-2 mt-1">
-                            <Badge variant="outline" className="text-xs">
+                <div key={source.id} className="neo-card neobrutalist-hover">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3 flex-1">
+                      <span className="text-2xl">{getSourceIcon(source.source_type)}</span>
+                      <div className="flex-1">
+                        <h4 className="font-black text-lg neo-uppercase">{source.title}</h4>
+                        <div className="flex items-center space-x-3 mt-2">
+                          <div className="neo-bg-secondary neo-border neo-shadow-sm px-2 py-1">
+                            <span className="text-xs font-bold neo-uppercase">
                               {getSourceTypeLabel(source.source_type)}
-                            </Badge>
-                            <span className="text-xs text-gray-500">
+                            </span>
+                          </div>
+                          <div className="neo-bg-muted neo-border neo-shadow-sm px-2 py-1">
+                            <span className="text-xs font-bold neo-uppercase">
                               {source.created_at.toLocaleDateString()}
                             </span>
                           </div>
                         </div>
                       </div>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-8 w-8 p-0 text-gray-400 hover:text-red-500"
-                          >
-                            🗑️
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Source</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to delete "{source.title}"? This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDeleteSource(source.id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
                     </div>
-
-                    {source.source_url && (
-                      <div className="mb-2">
-                        <a
-                          href={source.source_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-sm text-blue-600 hover:underline"
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button
+                          className="text-2xl hover:transform hover:scale-110 transition-transform p-2"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer'
+                          }}
                         >
-                          🔗 {source.source_url}
-                        </a>
-                      </div>
-                    )}
-
-                    <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">
-                      <p className="whitespace-pre-wrap line-clamp-4">
-                        {source.content}
-                      </p>
-                      {source.content.length > 200 && (
-                        <button className="text-blue-600 text-xs mt-2 hover:underline">
-                          Show more...
+                          🗑️
                         </button>
-                      )}
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="neo-card neo-border-thick neo-shadow-xl">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="neo-text-xl neo-bold neo-uppercase">
+                            DELETE SOURCE
+                          </AlertDialogTitle>
+                          <AlertDialogDescription className="font-bold neo-uppercase">
+                            ARE YOU SURE YOU WANT TO DELETE "{source.title}"? THIS ACTION CANNOT BE UNDONE.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="gap-4">
+                          <AlertDialogCancel className="btn-secondary">CANCEL</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleDeleteSource(source.id)}
+                            className="btn-destructive"
+                          >
+                            DELETE
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+
+                  {source.source_url && (
+                    <div className="mb-4">
+                      <a
+                        href={source.source_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="neo-bg-accent neo-border neo-shadow px-3 py-2 inline-block font-bold neo-uppercase text-sm hover:transform hover:translate-x-1 hover:translate-y-1 transition-transform"
+                      >
+                        🔗 {source.source_url}
+                      </a>
                     </div>
-                  </CardContent>
-                </Card>
+                  )}
+
+                  <div className="neo-bg-muted neo-border neo-inset p-4">
+                    <p className="whitespace-pre-wrap font-semibold">
+                      {source.content}
+                    </p>
+                  </div>
+                </div>
               ))}
             </div>
           </ScrollArea>
@@ -346,9 +338,10 @@ export function SourceManager({ documentId }: SourceManagerProps) {
       </div>
 
       {sources.length > 0 && (
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-700">
-            💡 <strong>Tip:</strong> Your sources will be used by the AI Assistant to provide more accurate and relevant suggestions when helping with your document.
+        <div className="neo-bg-accent neo-border neo-shadow p-4 mt-6">
+          <p className="font-bold neo-uppercase">
+            💡 TIP: YOUR SOURCES WILL BE USED BY THE AI ASSISTANT TO PROVIDE MORE ACCURATE 
+            AND RELEVANT SUGGESTIONS WHEN HELPING WITH YOUR DOCUMENT.
           </p>
         </div>
       )}

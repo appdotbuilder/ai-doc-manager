@@ -1,9 +1,4 @@
-
 import { useState, useEffect, useCallback } from 'react';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { trpc } from '@/utils/trpc';
 import type { Document, UpdateDocumentInput } from '../../../server/src/schema';
 
@@ -106,94 +101,115 @@ export function DocumentEditor({ document, onUpdate }: DocumentEditorProps) {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Editor Header */}
-      <div className="p-6 border-b bg-gray-50">
+      {/* Neobrutalist Editor Header */}
+      <div className="neo-bg-secondary neo-border-thick neo-shadow p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <input
             type="text"
             value={title}
             onChange={handleTitleChange}
-            className="text-2xl font-bold bg-transparent border-none outline-none flex-1 mr-4"
-            placeholder="Document title..."
+            className="neo-text-2xl neo-bold neo-uppercase bg-transparent border-none outline-none flex-1 mr-4"
+            placeholder="DOCUMENT TITLE..."
+            style={{ 
+              background: 'transparent',
+              border: 'none',
+              fontFamily: 'Arial Black, Helvetica, sans-serif',
+              fontWeight: '900'
+            }}
           />
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
             {hasUnsavedChanges && (
-              <Badge variant="outline" className="text-orange-600 border-orange-300">
-                Unsaved changes
-              </Badge>
+              <div className="neo-bg-accent neo-border neo-shadow-sm px-3 py-1">
+                <span className="text-sm font-bold neo-uppercase">⚠️ UNSAVED</span>
+              </div>
             )}
             {isSaving && (
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                💾 Saving...
-              </Badge>
+              <div className="neo-bg-primary neo-border neo-shadow-sm px-3 py-1">
+                <span className="text-sm font-bold neo-uppercase text-white">💾 SAVING...</span>
+              </div>
             )}
             {lastSaved && !hasUnsavedChanges && !isSaving && (
-              <Badge variant="secondary" className="bg-green-100 text-green-700">
-                ✅ Saved {lastSaved.toLocaleTimeString()}
-              </Badge>
+              <div className="neo-bg-secondary neo-border neo-shadow-sm px-3 py-1">
+                <span className="text-sm font-bold neo-uppercase">✅ SAVED {lastSaved.toLocaleTimeString()}</span>
+              </div>
             )}
           </div>
         </div>
         
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <div className="flex items-center space-x-4">
-            <span>📊 {getWordCount(plainTextContent)} words</span>
-            <span>🔤 {getCharacterCount(plainTextContent)} characters</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <div className="neo-bg-muted neo-border neo-shadow-sm px-3 py-1">
+              <span className="text-sm font-bold neo-uppercase">📊 {getWordCount(plainTextContent)} WORDS</span>
+            </div>
+            <div className="neo-bg-muted neo-border neo-shadow-sm px-3 py-1">
+              <span className="text-sm font-bold neo-uppercase">🔤 {getCharacterCount(plainTextContent)} CHARS</span>
+            </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
+          <button
             onClick={handleManualSave}
             disabled={!hasUnsavedChanges || isSaving}
+            className="btn-secondary"
           >
-            {isSaving ? '💾 Saving...' : '💾 Save Now'}
-          </Button>
+            {isSaving ? '💾 SAVING...' : '💾 SAVE NOW'}
+          </button>
         </div>
       </div>
 
-      {/* Rich Text Editor Area */}
-      <div className="flex-1 p-6">
-        <Card className="h-full">
-          <CardContent className="p-4 h-full">
-            <div className="h-full flex flex-col">
-              {/* Toolbar */}
-              <div className="mb-4 p-2 border-b bg-gray-50 rounded-t-lg">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <span>✏️ Rich Text Editor</span>
-                  <span className="text-gray-400">|</span>
-                  <span className="text-xs">Currently editing in plain text mode</span>
-                  <Badge variant="outline" className="ml-auto text-xs">
-                    🚧 Rich text features coming soon
-                  </Badge>
+      {/* Neobrutalist Rich Text Editor Area */}
+      <div className="flex-1">
+        <div className="neo-card h-full">
+          <div className="h-full flex flex-col">
+            {/* Neobrutalist Toolbar */}
+            <div className="neo-bg-accent neo-border-thick neo-shadow-sm p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <span className="font-black neo-uppercase text-lg">✏️ RICH TEXT EDITOR</span>
+                  <span className="font-bold neo-uppercase text-sm">PLAIN TEXT MODE</span>
+                </div>
+                <div className="neo-bg-muted neo-border neo-shadow-sm px-3 py-1">
+                  <span className="text-xs font-bold neo-uppercase">🚧 RICH TEXT COMING SOON</span>
                 </div>
               </div>
+            </div>
 
-              {/* Editor Content */}
-              <div className="flex-1">
-                <Textarea
+            {/* Neobrutalist Editor Content */}
+            <div className="flex-1 p-4">
+              <div className="neo-border-thick neo-inset h-full">
+                <textarea
                   value={content}
                   onChange={handleContentChange}
-                  placeholder="Start writing your document here... 
+                  placeholder="START WRITING YOUR DOCUMENT HERE...
 
-✨ Use the AI Assistant tab to get help with writing
-📎 Add sources in the Sources tab to enhance your content
-🤖 Generate study guides and summaries with AI
+✨ USE THE AI ASSISTANT TAB TO GET HELP WITH WRITING
+📎 ADD SOURCES IN THE SOURCES TAB TO ENHANCE YOUR CONTENT  
+🤖 GENERATE STUDY GUIDES AND SUMMARIES WITH AI
 
-Your content will be automatically saved as you type."
-                  className="h-full resize-none border-none focus:ring-0 text-base leading-relaxed"
-                  style={{ minHeight: '400px' }}
+YOUR CONTENT WILL BE AUTOMATICALLY SAVED AS YOU TYPE."
+                  className="w-full h-full p-6 text-base leading-relaxed resize-none"
+                  style={{ 
+                    minHeight: '400px',
+                    fontFamily: 'Arial, Helvetica, sans-serif',
+                    fontWeight: '600',
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none'
+                  }}
                 />
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      {/* Status Bar */}
-      <div className="px-6 py-3 border-t bg-gray-50 text-xs text-gray-500">
+      {/* Neobrutalist Status Bar */}
+      <div className="neo-bg-muted neo-border-thick neo-shadow mt-4 px-6 py-3">
         <div className="flex items-center justify-between">
-          <span>Document ID: {document.id} • Created: {document.created_at.toLocaleDateString()}</span>
-          <span>Auto-save enabled • Changes saved automatically</span>
+          <span className="text-sm font-bold neo-uppercase">
+            DOCUMENT ID: {document.id} • CREATED: {document.created_at.toLocaleDateString()}
+          </span>
+          <span className="text-sm font-bold neo-uppercase">
+            🔄 AUTO-SAVE ENABLED • CHANGES SAVED AUTOMATICALLY
+          </span>
         </div>
       </div>
     </div>

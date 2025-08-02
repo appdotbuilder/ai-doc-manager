@@ -1,6 +1,3 @@
-
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
@@ -40,70 +37,74 @@ export function DocumentList({
 
   if (isLoading) {
     return (
-      <div className="p-6 space-y-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-100 rounded w-full"></div>
-          </div>
-        ))}
+      <div className="p-6 space-y-4">
+        <div className="spinner"></div>
+        <p className="text-center font-bold neo-uppercase">LOADING DOCUMENTS...</p>
       </div>
     );
   }
 
   if (documents.length === 0) {
     return (
-      <div className="p-6 text-center text-gray-500">
-        <div className="text-4xl mb-3">📄</div>
-        <p className="text-sm">No documents yet.</p>
-        <p className="text-xs mt-1">Create your first document above!</p>
+      <div className="p-8 text-center">
+        <div className="text-6xl mb-4">📄</div>
+        <p className="font-bold neo-uppercase text-lg">NO DOCUMENTS YET</p>
+        <p className="font-bold neo-uppercase text-sm mt-2">CREATE YOUR FIRST DOCUMENT ABOVE!</p>
       </div>
     );
   }
 
   return (
     <ScrollArea className="h-full">
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-3">
         {documents.map((document: Document) => (
           <div
             key={document.id}
-            className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+            className={`neo-border neo-shadow p-4 cursor-pointer neobrutalist-hover transition-all ${
               selectedDocument?.id === document.id
-                ? 'bg-blue-50 border-blue-200 shadow-sm'
-                : 'bg-white border-gray-200 hover:border-gray-300'
+                ? 'neo-bg-accent transform translate-x-1 translate-y-1'
+                : 'neo-bg-card hover:neo-bg-secondary'
             }`}
             onClick={() => onSelectDocument(document.id)}
           >
-            <div className="flex items-start justify-between mb-2">
-              <h4 className="font-medium text-sm truncate flex-1 mr-2">
+            <div className="flex items-start justify-between mb-3">
+              <h4 className="font-black text-sm neo-uppercase truncate flex-1 mr-2">
                 {document.title}
               </h4>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+                  <button
+                    className="text-lg hover:transform hover:scale-110 transition-transform"
                     onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: '4px',
+                      cursor: 'pointer'
+                    }}
                   >
                     🗑️
-                  </Button>
+                  </button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="neo-card neo-border-thick neo-shadow-xl">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Delete Document</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Are you sure you want to delete "{document.title}"? This action cannot be undone.
+                    <AlertDialogTitle className="neo-text-xl neo-bold neo-uppercase">
+                      DELETE DOCUMENT
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="font-bold neo-uppercase">
+                      ARE YOU SURE YOU WANT TO DELETE "{document.title}"? THIS ACTION CANNOT BE UNDONE.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogFooter className="gap-4">
+                    <AlertDialogCancel className="btn-secondary">
+                      CANCEL
+                    </AlertDialogCancel>
                     <AlertDialogAction
                       onClick={() => handleDelete(document.id)}
                       disabled={deletingId === document.id}
-                      className="bg-red-600 hover:bg-red-700"
+                      className="btn-destructive"
                     >
-                      {deletingId === document.id ? 'Deleting...' : 'Delete'}
+                      {deletingId === document.id ? 'DELETING...' : 'DELETE'}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -111,19 +112,23 @@ export function DocumentList({
             </div>
             
             {document.content && (
-              <p className="text-xs text-gray-600 mb-2 line-clamp-2">
+              <p className="text-sm font-bold mb-3 line-clamp-2">
                 {getContentPreview(document.content)}
               </p>
             )}
             
             <div className="flex items-center justify-between">
-              <Badge variant="outline" className="text-xs">
-                {document.updated_at.toLocaleDateString()}
-              </Badge>
+              <div className="neo-bg-muted neo-border neo-shadow-sm px-2 py-1">
+                <span className="text-xs font-bold neo-uppercase">
+                  {document.updated_at.toLocaleDateString()}
+                </span>
+              </div>
               {selectedDocument?.id === document.id && (
-                <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
-                  Active
-                </Badge>
+                <div className="neo-bg-primary neo-border neo-shadow-sm px-3 py-1">
+                  <span className="text-xs font-bold neo-uppercase text-white">
+                    ⚡ ACTIVE
+                  </span>
+                </div>
               )}
             </div>
           </div>

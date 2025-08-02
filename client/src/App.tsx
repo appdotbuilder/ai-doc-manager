@@ -1,16 +1,12 @@
-
 import { useState, useEffect, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { trpc } from '@/utils/trpc';
 import { DocumentEditor } from '@/components/DocumentEditor';
 import { DocumentList } from '@/components/DocumentList';
 import { SourceManager } from '@/components/SourceManager';
 import { AiAssistant } from '@/components/AiAssistant';
 import type { Document, CreateDocumentInput, User } from '../../server/src/schema';
+import './App.css';
 
 function App() {
   // Current user (in real app, this would come from auth)
@@ -148,59 +144,60 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <header className="bg-white border-b border-gray-200 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen neo-bg-card">
+      {/* Neobrutalist Header */}
+      <header className="neo-bg-primary neo-border-thick neo-shadow-lg">
+        <div className="container">
+          <div className="flex items-center justify-between py-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">📝 DocuMind</h1>
-              <p className="text-sm text-gray-600">AI-Powered Document Editor</p>
+              <h1 className="neo-text-3xl neo-bold">📝 DOCUMIND</h1>
+              <p className="text-lg font-bold neo-uppercase">AI-Powered Document Editor</p>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                👤 {currentUser.name}
-              </Badge>
+              <div className="neo-bg-accent neo-border neo-shadow px-4 py-2">
+                <span className="neo-bold neo-uppercase">👤 {currentUser.name}</span>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6 flex gap-6 h-[calc(100vh-120px)]">
-        {/* Sidebar */}
-        <div className="w-80 flex flex-col space-y-4">
+      <div className="container flex gap-8 h-[calc(100vh-140px)] py-6">
+        {/* Neobrutalist Sidebar */}
+        <div className="w-96 flex flex-col space-y-6">
           {/* Create Document */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">✨ Create New Document</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleCreateDocument} className="space-y-3">
-                <Input
-                  placeholder="Document title..."
-                  value={newDocumentTitle}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setNewDocumentTitle(e.target.value)
-                  }
-                  required
-                />
-                <Button type="submit" disabled={isCreating} className="w-full">
-                  {isCreating ? '⏳ Creating...' : '📄 Create Document'}
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <div className="neo-card">
+            <h3 className="neo-text-xl neo-bold mb-4">✨ CREATE NEW DOCUMENT</h3>
+            <form onSubmit={handleCreateDocument} className="space-y-4">
+              <input
+                type="text"
+                placeholder="DOCUMENT TITLE..."
+                value={newDocumentTitle}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewDocumentTitle(e.target.value)
+                }
+                required
+                className="w-full"
+              />
+              <button type="submit" disabled={isCreating} className="w-full">
+                {isCreating ? '⏳ CREATING...' : '📄 CREATE DOCUMENT'}
+              </button>
+            </form>
+          </div>
 
           {/* Document List */}
-          <Card className="flex-1 overflow-hidden">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg">📚 Your Documents</CardTitle>
+          <div className="neo-card flex-1 overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="neo-text-xl neo-bold">📚 YOUR DOCUMENTS</h3>
               {documents.length > 0 && (
-                <Badge variant="outline" className="w-fit">
-                  {documents.length} documents
-                </Badge>
+                <div className="neo-bg-secondary neo-border neo-shadow-sm px-3 py-1">
+                  <span className="font-bold text-sm neo-uppercase">
+                    {documents.length} DOCS
+                  </span>
+                </div>
               )}
-            </CardHeader>
-            <CardContent className="h-full overflow-hidden p-0">
+            </div>
+            <div className="h-full overflow-hidden">
               <DocumentList
                 documents={documents}
                 selectedDocument={selectedDocument}
@@ -208,36 +205,47 @@ function App() {
                 onDeleteDocument={handleDeleteDocument}
                 isLoading={isLoading}
               />
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           {selectedDocument ? (
-            <Card className="flex-1 overflow-hidden">
-              <CardHeader className="pb-3 border-b">
+            <div className="neo-card flex-1 overflow-hidden">
+              {/* Document Header */}
+              <div className="neo-border-thick neo-bg-accent p-6 mb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle className="text-xl">{selectedDocument.title}</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Last updated: {selectedDocument.updated_at.toLocaleDateString()}
+                    <h2 className="neo-text-2xl neo-bold">{selectedDocument.title}</h2>
+                    <p className="text-lg font-bold neo-uppercase mt-2">
+                      LAST UPDATED: {selectedDocument.updated_at.toLocaleDateString()}
                     </p>
                   </div>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
-                    💾 Auto-saved
-                  </Badge>
+                  <div className="neo-bg-secondary neo-border neo-shadow px-4 py-2">
+                    <span className="font-bold neo-uppercase">💾 AUTO-SAVED</span>
+                  </div>
                 </div>
-              </CardHeader>
-              <CardContent className="flex-1 overflow-hidden p-0">
+              </div>
+
+              {/* Tabs Navigation */}
+              <div className="flex-1 overflow-hidden">
                 <Tabs defaultValue="editor" className="h-full flex flex-col">
-                  <TabsList className="mx-6 mt-4 grid w-fit grid-cols-3">
-                    <TabsTrigger value="editor">✏️ Editor</TabsTrigger>
-                    <TabsTrigger value="sources">📎 Sources</TabsTrigger>
-                    <TabsTrigger value="ai">🤖 AI Assistant</TabsTrigger>
-                  </TabsList>
+                  <div className="px-6 mb-4">
+                    <TabsList className="grid w-fit grid-cols-3 neo-border neo-shadow">
+                      <TabsTrigger value="editor" className="neo-bold neo-uppercase">
+                        ✏️ EDITOR
+                      </TabsTrigger>
+                      <TabsTrigger value="sources" className="neo-bold neo-uppercase">
+                        📎 SOURCES
+                      </TabsTrigger>
+                      <TabsTrigger value="ai" className="neo-bold neo-uppercase">
+                        🤖 AI ASSISTANT
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
                   
-                  <div className="flex-1 overflow-hidden">
+                  <div className="flex-1 overflow-hidden px-6 pb-6">
                     <TabsContent value="editor" className="h-full m-0">
                       <DocumentEditor
                         document={selectedDocument}
@@ -264,27 +272,29 @@ function App() {
                     </TabsContent>
                   </div>
                 </Tabs>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ) : (
-            <Card className="flex-1 flex items-center justify-center">
-              <CardContent className="text-center py-12">
-                <div className="text-6xl mb-4">📝</div>
-                <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                  Welcome to DocuMind
+            <div className="neo-card flex-1 flex items-center justify-center">
+              <div className="text-center py-16">
+                <div className="text-8xl mb-6">📝</div>
+                <h3 className="neo-text-2xl neo-bold mb-4">
+                  WELCOME TO DOCUMIND
                 </h3>
-                <p className="text-gray-500 max-w-md">
-                  Select a document from the sidebar to start editing, or create a new one to begin your AI-assisted writing journey.
+                <p className="text-lg font-bold neo-uppercase max-w-md mb-6">
+                  SELECT A DOCUMENT FROM THE SIDEBAR TO START EDITING, 
+                  OR CREATE A NEW ONE TO BEGIN YOUR AI-ASSISTED WRITING JOURNEY.
                 </p>
                 {documents.length === 0 && !isLoading && (
-                  <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <p className="text-sm text-blue-700">
-                      💡 <strong>Tip:</strong> Your documents will be enhanced with AI assistance and source management features!
+                  <div className="neo-bg-accent neo-border neo-shadow p-6 max-w-lg">
+                    <p className="font-bold neo-uppercase">
+                      💡 TIP: YOUR DOCUMENTS WILL BE ENHANCED WITH AI ASSISTANCE 
+                      AND SOURCE MANAGEMENT FEATURES!
                     </p>
                   </div>
                 )}
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </div>
       </div>
