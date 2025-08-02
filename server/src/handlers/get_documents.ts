@@ -1,9 +1,23 @@
 
+import { db } from '../db';
+import { documentsTable } from '../db/schema';
 import { type GetDocumentsInput, type Document } from '../schema';
+import { eq, desc } from 'drizzle-orm';
 
 export const getDocuments = async (input: GetDocumentsInput): Promise<Document[]> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is fetching documents for a specific user with pagination.
-  // Should return only documents belonging to the specified user_id with limit/offset applied.
-  return [];
+  try {
+    // Build query with user filter and pagination
+    const results = await db.select()
+      .from(documentsTable)
+      .where(eq(documentsTable.user_id, input.user_id))
+      .orderBy(desc(documentsTable.updated_at))
+      .limit(input.limit)
+      .offset(input.offset)
+      .execute();
+
+    return results;
+  } catch (error) {
+    console.error('Get documents failed:', error);
+    throw error;
+  }
 };

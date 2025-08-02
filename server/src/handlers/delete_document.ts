@@ -1,10 +1,26 @@
 
+import { db } from '../db';
+import { documentsTable } from '../db/schema';
 import { type DeleteDocumentInput } from '../schema';
+import { eq, and } from 'drizzle-orm';
 
 export const deleteDocument = async (input: DeleteDocumentInput): Promise<boolean> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is deleting a document and all its related data (sources, AI responses).
-  // Should verify that the document belongs to the specified user_id for security.
-  // Returns true if successfully deleted, false if document not found or unauthorized.
-  return false;
+  try {
+    // Delete the document only if it belongs to the specified user
+    const result = await db.delete(documentsTable)
+      .where(
+        and(
+          eq(documentsTable.id, input.id),
+          eq(documentsTable.user_id, input.user_id)
+        )
+      )
+      .returning()
+      .execute();
+
+    // Return true if a document was deleted, false if not found or unauthorized
+    return result.length > 0;
+  } catch (error) {
+    console.error('Document deletion failed:', error);
+    throw error;
+  }
 };

@@ -1,18 +1,36 @@
 
+import { db } from '../db';
+import { sourcesTable, documentsTable } from '../db/schema';
 import { type CreateSourceInput, type Source } from '../schema';
+import { eq } from 'drizzle-orm';
 
 export const createSource = async (input: CreateSourceInput): Promise<Source> => {
-  // This is a placeholder declaration! Real code should be implemented here.
-  // The goal of this handler is creating a new source attached to a document.
-  // Should validate that the document_id exists and the user has access to it.
-  // For URL sources, should optionally fetch and process the content.
-  return {
-    id: 0, // Placeholder ID
-    document_id: input.document_id,
-    title: input.title,
-    content: input.content,
-    source_type: input.source_type,
-    source_url: input.source_url || null,
-    created_at: new Date()
-  } as Source;
+  try {
+    // Verify that the document exists
+    const document = await db.select()
+      .from(documentsTable)
+      .where(eq(documentsTable.id, input.document_id))
+      .execute();
+
+    if (document.length === 0) {
+      throw new Error(`Document with id ${input.document_id} not found`);
+    }
+
+    // Insert source record
+    const result = await db.insert(sourcesTable)
+      .values({
+        document_id: input.document_id,
+        title: input.title,
+        content: input.content,
+        source_type: input.source_type,
+        source_url: input.source_url || null
+      })
+      .returning()
+      .execute();
+
+    return result[0];
+  } catch (error) {
+    console.error('Source creation failed:', error);
+    throw error;
+  }
 };
